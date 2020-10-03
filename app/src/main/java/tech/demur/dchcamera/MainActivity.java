@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import tech.demur.dchcamera.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String RECORDINGS_TABLE = "recordings";
     ActivityMainBinding mMainBinging;
     MainViewModel mViewModel;
 
