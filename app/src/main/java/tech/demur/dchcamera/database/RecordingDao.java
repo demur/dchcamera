@@ -23,11 +23,17 @@ public interface RecordingDao {
     @Delete
     void delete(Recording recording);
 
-    @Query("SELECT * FROM " + MainActivity.RECORDINGS_TABLE + " ORDER BY id")
+    @Query("SELECT * FROM " + MainActivity.RECORDINGS_TABLE + " ORDER BY id DESC")
     List<Recording> all();
 
-    @Query("SELECT * FROM " + MainActivity.RECORDINGS_TABLE + " ORDER BY id")
+    @Query("SELECT * FROM " + MainActivity.RECORDINGS_TABLE + " ORDER BY id ASC")
+    List<Recording> allAsc();
+
+    @Query("SELECT * FROM " + MainActivity.RECORDINGS_TABLE + " ORDER BY id DESC")
     LiveData<List<Recording>> allLive();
+
+    @Query("SELECT * FROM " + MainActivity.RECORDINGS_TABLE + " ORDER BY id ASC")
+    LiveData<List<Recording>> allAscLive();
 
     @Query("SELECT name FROM " + MainActivity.RECORDINGS_TABLE)
     List<String> getNames();
