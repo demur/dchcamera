@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">DCH Camera</string>
+    <string name="record_tab_title">Record</string>
+    <string name="saved_recordings_tab_title">Saved Recordings</string>
+    <string name="file_name">Name<font fgcolor='#FF0000'>*</font></string>
+    <string name="required">* Required</string>
+    <string name="error_name_exists">This name already exists</string>
+    <string name="duration_label">Duration</string>
+    <string name="fab_record">Record</string>
+    <string name="fab_content_description">Start recording</string>
+    <string name="error_no_data_for_camera_activity">Ooops!\\nApp was unable to retrieve needed data for capturing video</string>
+    <string name="error_permissions_not_granted">Not all permissions are granted. Unable to proceed</string>
+    <string name="invalid_camera_activity_result">Invalid data returned from camera</string>
+    <string name="video_capturing_ready">Ready!</string>
+    <string name="video_capturing_steady">Steady!</string>
+    <string name="video_capturing_starting">Go!</string>
+    <string name="video_capturing_finished">DONE</string>
+    <string name="video_extension">.mp4</string>
+    <string name="rv_empty">Nothing yet</string>
+    <string name="empty" />
 </resources>
