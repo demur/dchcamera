@@ -2,6 +2,7 @@ package tech.demur.dchcamera;
 
 import android.app.Application;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -27,10 +28,15 @@ public class MainViewModel extends AndroidViewModel {
     public ObservableInt loading;
     public ObservableInt showEmpty;
     public ObservableFloat slider = new ObservableFloat(20f);
-    public ObservableBoolean fabEnabled = new ObservableBoolean(false);
     private List<String> existingNames = new ArrayList<>();
     public ObservableInt errorFilenameMessage = new ObservableInt(R.string.empty);
     public ObservableField<String> filename = new ObservableField<>();
+    public ObservableBoolean fabEnabled = new ObservableBoolean(filename, errorFilenameMessage) {
+        @Override
+        public boolean get() {
+            return !TextUtils.isEmpty(filename.get()) && errorFilenameMessage.get() == R.string.empty;
+        }
+    };
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -99,16 +105,13 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void afterTextChangedName(Editable s) {
-        if (s.toString().replaceAll("^\\s+", "").isEmpty()) {
-            fabEnabled.set(false);
+        if (TextUtils.isEmpty(s.toString().replaceAll("^\\s+", ""))) {
             return;
         }
         if (existingNames.contains(s.toString().replaceAll("^\\s+", "").toLowerCase())) {
             errorFilenameMessage.set(R.string.error_name_exists);
-            fabEnabled.set(false);
         } else {
             errorFilenameMessage.set(R.string.empty);
-            fabEnabled.set(true);
         }
     }
 }
