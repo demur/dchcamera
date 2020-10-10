@@ -17,10 +17,10 @@ import java.util.List;
 
 import tech.demur.dchcamera.adapters.RecordingAdapter;
 import tech.demur.dchcamera.database.Recording;
-import tech.demur.dchcamera.database.RecordingRoomDB;
+import tech.demur.dchcamera.database.RecordingRepository;
 
 public class MainViewModel extends AndroidViewModel {
-    private final RecordingRoomDB mDb;
+    private final RecordingRepository mRepository;
     private final LiveData<List<Recording>> allRecordingsLive;
     private final LiveData<List<String>> allNamesLive;
     private RecordingAdapter adapter;
@@ -34,9 +34,9 @@ public class MainViewModel extends AndroidViewModel {
 
     public MainViewModel(@NonNull Application application) {
         super(application);
-        mDb = RecordingRoomDB.get(this.getApplication());
-        allRecordingsLive = mDb.recordingDao().allLive();
-        allNamesLive = mDb.recordingDao().getLiveNames();
+        mRepository = new RecordingRepository(application);
+        allRecordingsLive = mRepository.getAllLive();
+        allNamesLive = mRepository.getNamesLive();
         adapter = new RecordingAdapter(R.layout.recording_rv_item, this);
         loading = new ObservableInt(View.GONE);
         showEmpty = new ObservableInt(View.GONE);
@@ -62,12 +62,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void insertRecording(Recording recording) {
-        RecordingRoomDB.databaseWriteExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                mDb.recordingDao().insert(recording);
-            }
-        });
+        mRepository.insert(recording);
     }
 
     public RecordingAdapter getAdapter() {
