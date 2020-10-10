@@ -1,6 +1,7 @@
 package tech.demur.dchcamera;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,5 +44,20 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         ).attach();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (mMainBinding.tabs.getSelectedTabPosition() == 0
+                && (event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP
+                || event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+            if (event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP) {
+                mViewModel.sliderInc();
+            } else {
+                mViewModel.sliderDec();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

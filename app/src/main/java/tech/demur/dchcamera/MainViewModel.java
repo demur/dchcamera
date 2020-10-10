@@ -28,6 +28,7 @@ public class MainViewModel extends AndroidViewModel {
     public ObservableInt loading;
     public ObservableInt showEmpty;
     public ObservableFloat slider = new ObservableFloat(20f);
+    public float sliderStep, sliderMax, sliderMin;
     private List<String> existingNames = new ArrayList<>();
     public ObservableInt errorFilenameMessage = new ObservableInt(R.string.empty);
     public ObservableField<String> filename = new ObservableField<>();
@@ -112,6 +113,18 @@ public class MainViewModel extends AndroidViewModel {
             errorFilenameMessage.set(R.string.error_name_exists);
         } else {
             errorFilenameMessage.set(R.string.empty);
+        }
+    }
+
+    public void sliderInc() {
+        if (slider.get() + sliderStep <= sliderMax) {
+            slider.set(slider.get() + sliderStep);
+        }
+    }
+
+    public void sliderDec() {
+        if (slider.get() - sliderStep >= sliderMin) {
+            slider.set(slider.get() - sliderStep);
         }
     }
 }

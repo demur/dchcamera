@@ -66,6 +66,9 @@ public class PresetFragment extends Fragment {
                 return String.format(Locale.US, "%d:%02d", (int) value / 60, (int) value % 60);
             }
         });
+        mViewModel.sliderStep = mBinding.slider.getStepSize();
+        mViewModel.sliderMax = mBinding.slider.getValueTo();
+        mViewModel.sliderMin = mBinding.slider.getValueFrom();
         mViewModel.getAllNamesLive().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
             @Override
             public void onChanged(List<String> strings) {
