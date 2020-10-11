@@ -1,5 +1,6 @@
 package tech.demur.dchcamera.bindings;
 
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.widget.TextView;
 
@@ -9,7 +10,9 @@ import androidx.databinding.InverseBindingAdapter;
 import androidx.databinding.InverseBindingListener;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.Slider;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
@@ -67,5 +70,19 @@ public class CustomViewBindings {
                 attrChange.onChange();
             }
         });
+    }
+
+    @BindingAdapter("setLabelFormatter")
+    public static void bindLabelFormatter(Slider slider, LabelFormatter labelFormatter) {
+        slider.setLabelFormatter(labelFormatter);
+    }
+
+    @BindingAdapter("setFilter")
+    public static void bindFilter(TextInputEditText editText, InputFilter inputFilter) {
+        InputFilter[] srcArr = editText.getFilters();
+        InputFilter[] destArr = new InputFilter[srcArr.length + 1];
+        System.arraycopy(srcArr, 0, destArr, 0, srcArr.length);
+        destArr[srcArr.length] = inputFilter;
+        editText.setFilters(destArr);
     }
 }

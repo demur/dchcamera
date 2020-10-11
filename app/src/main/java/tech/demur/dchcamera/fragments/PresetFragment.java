@@ -5,10 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.InputFilter;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +18,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.slider.LabelFormatter;
 import com.otaliastudios.cameraview.CameraUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import tech.demur.dchcamera.CameraActivity;
 import tech.demur.dchcamera.MainViewModel;
@@ -59,13 +53,6 @@ public class PresetFragment extends Fragment {
         }
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_preset, container, false);
         mBinding.setModel(mViewModel);
-        mBinding.slider.setLabelFormatter(new LabelFormatter() {
-            @NonNull
-            @Override
-            public String getFormattedValue(float value) {
-                return String.format(Locale.US, "%d:%02d", (int) value / 60, (int) value % 60);
-            }
-        });
         mViewModel.sliderStep = mBinding.slider.getStepSize();
         mViewModel.sliderMax = mBinding.slider.getValueTo();
         mViewModel.sliderMin = mBinding.slider.getValueFrom();
@@ -83,7 +70,6 @@ public class PresetFragment extends Fragment {
             }
         });
         mBinding.fab.setOnClickListener(fabClickListener);
-        mBinding.filename.getEditText().setFilters(new InputFilter[]{filenameFilter});
         return mBinding.getRoot();
     }
 
@@ -152,54 +138,4 @@ public class PresetFragment extends Fragment {
             }
         }
     };
-
-    InputFilter filenameFilter = new InputFilter() {
-        @Override
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            boolean isChanged = false;
-            boolean isLeadingWhitespace = dstart == 0;
-            StringBuilder sb = new StringBuilder(end - start);
-            for (int i = start; i < end; i++) {
-                char c = source.charAt(i);
-                if (isValidFatFilenameChar(c) && !(isLeadingWhitespace && Character.isWhitespace(c))) {
-                    sb.append(c);
-                } else {
-                    isChanged = true;
-                }
-                if (isLeadingWhitespace && !Character.isWhitespace(c)) {
-                    isLeadingWhitespace = false;
-                }
-            }
-            if (isChanged) {
-                if (source instanceof Spanned) {
-                    SpannableString sp = new SpannableString(sb);
-                    TextUtils.copySpansFrom((Spanned) source, start, sb.length(), null, sp, 0);
-                    return sp;
-                }
-                return sb;
-            }
-            return null;
-        }
-    };
-
-    private static boolean isValidFatFilenameChar(char c) {
-        if ((0x00 <= c && c <= 0x1f)) {
-            return false;
-        }
-        switch (c) {
-            case '"':
-            case '*':
-            case '/':
-            case ':':
-            case '<':
-            case '>':
-            case '?':
-            case '\\':
-            case '|':
-            case 0x7F:
-                return false;
-            default:
-                return true;
-        }
-    }
 }

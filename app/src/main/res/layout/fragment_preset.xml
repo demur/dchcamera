@@ -42,7 +42,8 @@
                         android:layout_height="wrap_content"
                         android:afterTextChanged="@{model.afterTextChangedName}"
                         android:singleLine="true"
-                        android:text="@={model.filename}" />
+                        android:text="@={model.filename}"
+                        app:setFilter="@{model.getFilenameFilter()}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -82,6 +83,7 @@
                     app:layout_constraintEnd_toEndOf="@id/filename"
                     app:layout_constraintStart_toStartOf="@id/filename"
                     app:layout_constraintTop_toBottomOf="@id/duration"
+                    app:setLabelFormatter="@{model.getSliderLabelFormatter()}"
                     app:tickVisible="false" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

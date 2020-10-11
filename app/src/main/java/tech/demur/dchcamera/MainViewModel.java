@@ -2,6 +2,9 @@ package tech.demur.dchcamera;
 
 import android.app.Application;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -13,8 +16,11 @@ import androidx.databinding.ObservableInt;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.google.android.material.slider.LabelFormatter;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import tech.demur.dchcamera.adapters.RecordingAdapter;
 import tech.demur.dchcamera.database.Recording;
@@ -36,6 +42,13 @@ public class MainViewModel extends AndroidViewModel {
         @Override
         public boolean get() {
             return !TextUtils.isEmpty(filename.get()) && errorFilenameMessage.get() == R.string.empty;
+        }
+    };
+    private LabelFormatter sliderLabelFormatter = new LabelFormatter() {
+        @NonNull
+        @Override
+        public String getFormattedValue(float value) {
+            return String.format(Locale.US, "%d:%02d", (int) value / 60, (int) value % 60);
         }
     };
 
@@ -126,5 +139,63 @@ public class MainViewModel extends AndroidViewModel {
         if (slider.get() - sliderStep >= sliderMin) {
             slider.set(slider.get() - sliderStep);
         }
+    }
+
+    public LabelFormatter getSliderLabelFormatter() {
+        return sliderLabelFormatter;
+    }
+
+    private InputFilter filenameFilter = new InputFilter() {
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            boolean isChanged = false;
+            boolean isLeadingWhitespace = dstart == 0;
+            StringBuilder sb = new StringBuilder(end - start);
+            for (int i = start; i < end; i++) {
+                char c = source.charAt(i);
+                if (isValidFatFilenameChar(c) && !(isLeadingWhitespace && Character.isWhitespace(c))) {
+                    sb.append(c);
+                } else {
+                    isChanged = true;
+                }
+                if (isLeadingWhitespace && !Character.isWhitespace(c)) {
+                    isLeadingWhitespace = false;
+                }
+            }
+            if (isChanged) {
+                if (source instanceof Spanned) {
+                    SpannableString sp = new SpannableString(sb);
+                    TextUtils.copySpansFrom((Spanned) source, start, sb.length(), null, sp, 0);
+                    return sp;
+                }
+                return sb;
+            }
+            return null;
+        }
+
+        private boolean isValidFatFilenameChar(char c) {
+            if ((0x00 <= c && c <= 0x1f)) {
+                return false;
+            }
+            switch (c) {
+                case '"':
+                case '*':
+                case '/':
+                case ':':
+                case '<':
+                case '>':
+                case '?':
+                case '\\':
+                case '|':
+                case 0x7F:
+                    return false;
+                default:
+                    return true;
+            }
+        }
+    };
+
+    public InputFilter getFilenameFilter() {
+        return filenameFilter;
     }
 }
