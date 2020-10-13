@@ -70,17 +70,6 @@ public class MainViewModel extends AndroidViewModel {
         return allNamesLive;
     }
 
-    public List<String> getAllNames() {
-        List<String> list = allNamesLive.getValue();
-        if (null != list) {
-            for (int i = 0; i < list.size(); i++) {
-                list.set(i, list.get(i).toLowerCase());
-            }
-            return list;
-        }
-        return new ArrayList<>();
-    }
-
     public void insertRecording(Recording recording) {
         mRepository.insert(recording);
     }
