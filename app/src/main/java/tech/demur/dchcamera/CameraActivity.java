@@ -1,6 +1,7 @@
 package tech.demur.dchcamera;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.Gravity;
@@ -112,9 +113,9 @@ public class CameraActivity extends AppCompatActivity {
                     getApplicationContext(),
                     R.string.error_no_data_for_camera_activity,
                     Toast.LENGTH_LONG);
-            TextView v = toast.getView().findViewById(android.R.id.message);
-            if (null != v) {
-                v.setGravity(Gravity.CENTER);
+            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.R
+                    && null != toast.getView() && null != toast.getView().findViewById(android.R.id.message)) {
+                ((TextView) toast.getView().findViewById(android.R.id.message)).setGravity(Gravity.CENTER);
             }
             toast.show();
             NavUtils.navigateUpFromSameTask(this);
